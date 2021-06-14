@@ -5,7 +5,7 @@ Additional Files required to compile this kernel:
 1. android-ndk-r21d
 2. clang r383902b
 
-Steps to Compile this kernel:
+COMPILING MPTCP KERNEL
 
 1. If you are compiling for the first time, run the build_kirisakura_clean.sh script
   a. You have to modify the CLANG path & Cross Compiler path in the script
