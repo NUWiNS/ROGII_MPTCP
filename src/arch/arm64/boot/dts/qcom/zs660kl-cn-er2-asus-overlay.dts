@@ -1,0 +1,149 @@
+/* Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include "zs660kl-cn-er1-asus-overlay.dts"
+
+/ {
+	model = "Qualcomm Technologies, Inc. SM8150 v2 CN-ER2";
+	compatible = "qcom,sm8150-mtp", "qcom,sm8150", "qcom,mtp";
+	qcom,board-id = <61 0>;
+};
+
+
+/*    ====================================
+ *    overlay for sm8150-v2.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-v2.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150.dtsi - start
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-v2.dtsi/sm8150.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-mtp.dtsi - start
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-mtp.dtsi - end
+ *    ====================================
+ */
+
+
+/*    ====================================
+ *    overlay for pmi8998.dtsi/pm8998.dtsi - start
+ *    ====================================
+ */
+
+
+/*    ====================================
+ *    overlay for pmi8998.dtsi/pm8998.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-pinctrl.dtsi - start
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-pinctrl.dtsi - end
+ *    ====================================
+ */
+
+
+/*    ====================================
+ *    overlay for sm8150-pmic.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-pmic.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-regulator.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-regulator.dtsi - end
+ *    ====================================
+ */
+  
+
+ 
+/*    ====================================
+ *    overlay for sm8150-v2-camera.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-v2-camera.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-camera-sensor-mtp.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-camera-sensor-mtp.dtsi - end
+ *    ====================================
+ */
+ 
+
+
+/*    ====================================
+ *    overlay for sm8150-camera.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-camera.dtsi - end
+ *    ====================================
+ */
+
+
+

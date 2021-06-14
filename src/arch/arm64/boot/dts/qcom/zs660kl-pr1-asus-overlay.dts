@@ -1,0 +1,180 @@
+/* Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include "zs660kl-er2-asus-overlay.dts"
+
+/ {
+	model = "Qualcomm Technologies, Inc. SM8150 v2 PR1";
+	compatible = "qcom,sm8150-mtp", "qcom,sm8150", "qcom,mtp";
+	qcom,board-id = <70 0>;
+};
+
+
+/*    ====================================
+ *    overlay for sm8150-v2.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-v2.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150.dtsi - start
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-v2.dtsi/sm8150.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-mtp.dtsi - start
+ *    ====================================
+ */
+// ASUS_BSP_Clay GripSensor +++
+&qupv3_se4_i2c {
+	status = "ok";
+	snt8100fsr-i2c@2c {
+		reg = <0x2c>;
+		compatible = "sentons, snt8100fsr-i2c";
+		grip_gpio12 = <12>;
+		//snt,gpio_reset = <&tlmm 12 0x0>;
+		pinctrl-names = "gpio12_rst_on", "gpio12_rst_off", "pinctrl_1v2_2v8_init", "pinctrl_1v2_2v8_close";
+		pinctrl-0 = <&gpio12_rst_on>;
+		pinctrl-1 = <&gpio12_rst_off>;
+		pinctrl-2 = <&snt_1v2_2v8_init>;
+		pinctrl-3 = <&snt_1v2_2v8_close>;
+	};
+	snt8100fsr-i2c@4c {
+		reg = <0x4c>;
+		wake-device = <1>;
+		compatible = "sentons, snt8100fsr-i2c";
+		snt,gpio_hostirq = <&tlmm 125 0x0>;
+		grip_gpio4 = <1>;
+		pinctrl-names = "grip_clk32";
+		pinctrl-0 = <&clk_out_default>;	
+	};
+};
+&qupv3_se7_i2c {
+	snt8100fsr-i2c@2c {
+		compatible = "sentons, snt8100fsr-i2ccc";
+	};
+	snt8100fsr-i2c@4c {
+		compatible = "sentons, snt8100fsr-i2ccc";
+	};
+};
+// ASUS_BSP_Clay GripSensor ---
+
+/*    ====================================
+ *    overlay for sm8150-mtp.dtsi - end
+ *    ====================================
+ */
+
+
+/*    ====================================
+ *    overlay for pmi8998.dtsi/pm8998.dtsi - start
+ *    ====================================
+ */
+
+
+/*    ====================================
+ *    overlay for pmi8998.dtsi/pm8998.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-pinctrl.dtsi - start
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-pinctrl.dtsi - end
+ *    ====================================
+ */
+
+
+/*    ====================================
+ *    overlay for sm8150-pmic.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-pmic.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-regulator.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-regulator.dtsi - end
+ *    ====================================
+ */
+  
+
+ 
+/*    ====================================
+ *    overlay for sm8150-v2-camera.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-v2-camera.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-camera-sensor-mtp.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-camera-sensor-mtp.dtsi - end
+ *    ====================================
+ */
+ 
+
+
+/*    ====================================
+ *    overlay for sm8150-camera.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-camera.dtsi - end
+ *    ====================================
+ */
+
+
+

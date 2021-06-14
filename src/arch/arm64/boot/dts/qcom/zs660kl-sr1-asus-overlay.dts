@@ -1,0 +1,776 @@
+/* Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include "zs660kl-evb-asus-overlay.dts"
+#include "sm8150-pcie.dtsi"
+
+/ {
+	model = "Qualcomm Technologies, Inc. SM8150 v2 SR1";
+	compatible = "qcom,sm8150-mtp", "qcom,sm8150", "qcom,mtp";
+	qcom,board-id = <40 0>;
+};
+
+// BSP SZ +++ Lydia_Wu add for DisplayPort
+&sde_dp {
+	/delete-property/ qcom,usb-en-gpio;
+	/delete-property/ qcom,aux-en-gpio;
+	qcom,aux-i2c-gpio = <&tlmm 164 0>;
+};
+// BSP SZ --- Lydia_Wu add for DisplayPort
+
+/*    ====================================
+ *    overlay for sm8150-v2.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-v2.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150.dtsi - start
+ *    ====================================
+ */
+// ASUS_BSP +++ KEY
+
+/delete-node/ &gpio_keys;
+
+&soc {
+	gpio_keys: gpio_keys_asus {
+		compatible = "gpio-keys";
+		label = "gpio-keys";
+
+		pinctrl-names = "tlmm_gpio_key_active","tlmm_gpio_key_suspend";
+		pinctrl-0 = <&gpio_key_active>;
+		pinctrl-1 = <&gpio_key_suspend>;
+
+		vol_down {
+			label = "volume_down";
+			gpios = <&tlmm 97 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <114>;
+			gpio-key,wakeup;
+			debounce-interval = <15>;
+			linux,can-disable;
+		};
+
+		vol_up {
+			label = "volume_up";
+			gpios = <&tlmm 134 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <115>;
+			gpio-key,wakeup;
+			debounce-interval = <15>;
+			linux,can-disable;
+		};
+	};
+
+// ASUS_BSP +++ Jacob Fingerprint sensor
+    asus-fingerprint {
+        fp-gpio-vcc-enable;
+        fp-gpio-reset = <&tlmm 141 0x0>;
+        fp-fod-panel = <0>;
+        pinctrl-names = "fod_exi_active";
+        pinctrl-0 = <&FOD_EXI_active>;
+        fp-FOD-EXI1 = <&tlmm 164 0x0>;
+        fp-FOD-EXI2 = <&tlmm 165 0x0>;
+        vcc-supply = <&pm8150l_l9>;
+        asus-fp,vcc-voltage = <2850000 2860000>;
+        sdcard-supply = <&pm8150l_l6>;
+        asus-sd,vcc-voltage = <2850000 2860000>;
+    };
+// ASUS_BSP --- Jacob Fingerprint sensor
+
+};
+
+// ASUS_BSP --- KEY
+
+// BSP SZ +++ Lotta_Lu EC_Driver
+&soc {
+	ec_hid {
+		compatible = "asus,ec_hid";
+
+		qcom.pogo-id-gpio = <&pm8150l_gpios 6 0x0>;
+		dongle,pogo-sleep = <&tlmm 104 0x0>;
+		dongle,pogo-det = <&pm8150l_gpios 2 0x0>;
+		dongle,pogo-aux-oe = <&tlmm 27 0x0>;
+		pinctrl-names = "default" , "pogo_sleep";
+		pinctrl-0 = <&pogo_id_default &pogo_det_default >;
+		pinctrl-1 = <&pogo_sleep>;
+
+		io-channels = <&pm8150l_vadc ADC_GPIO2>;
+		io-channel-names ="asus_pogo_vadc";
+		qcom,pogo-id-adc_tm = <&pm8150l_adc_tm ADC_GPIO2>;
+	};
+};
+
+&qupv3_se7_i2c
+{
+	status = "ok";
+	ec_i2c_ap@60{
+		compatible = "ec_i2c_ap";	
+		reg = <0x60>;  
+	};
+};
+// BSP SZ ---Lotta_Lu EC_Driver
+
+//ASUS_BSP_SZ Cassie add station aura +++
+&qupv3_se9_i2c {
+    status = "ok";
+    ene6k582_station@4e {
+        compatible = "ene6k582_station";
+        reg = <0x4e>;
+        };
+};
+//ASUS_BSP_SZ Cassie add station aura ---
+
+/*    ====================================
+ *    overlay for sm8150.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-mtp.dtsi - start
+ *    ====================================
+ */
+// ASUS_BSP Austin_T : NXP Charger & APS1690E +++
+&qupv3_se18_i2c {
+    	pca9468@5e {
+        	pca9468,irq-gpio = <&tlmm 132 0x0>;
+
+    	};
+
+	asp1690e@39 {
+		compatible = "asp1690e";
+		reg = <0x39>;
+	};
+};
+// ASUS_BSP Austin_T : NXP Charger & ASP1690E ---
+
+// ASUS_BSP +++ Jacob disable sdcard
+&sdhc_2 {
+	status = "disable";
+};
+// ASUS_BSP --- Jacob disable sdcard
+//ASUS_BSP Beryl +++ "touch"
+&qupv3_se17_i2c {
+	status = "ok";
+	normandy-i2c@5d{ 
+		compatible = "goodix,gt9886";	
+		reg = <0x5d>;  					
+		interrupt-parent = <&tlmm>;
+		vtouch-supply = <&pm8150_l17>;
+		interrupts = <122 0x2008>;
+		pinctrl-names = "pmx_ts_active","pmx_ts_suspend";
+		pinctrl-0 = <&ts_int_active &ts_reset_active>;
+		pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+		goodix,reset-gpio = <&tlmm 135 0x01>; 
+		goodix,irq-gpio = <&tlmm 122 0x2008>; 	
+		goodix,irq-flags = <2>; /* 1:trigger rising, 2:trigger falling;*/
+                goodix,panel-max-id = <10>; //max touch numbers
+                goodix,panel-max-x = <1080>; // x
+                goodix,panel-max-y = <2340>; // y
+                goodix,panel-max-w = <512>; //touch major
+                goodix,panel-max-p = <512>; //touch pressure
+		goodix,panel-key-map = <158 172 217>; /*KEY_BACK, KEY_HOMEPAGE, KEY_SEARCH*/
+		goodix,power-on-delay-us = <300000>; /*300ms*/
+		goodix,power-off-delay-us = <5000>;
+		/*goodix,swap-axis;*/
+		goodix,x2x;
+		goodix,y2y;
+		goodix,pen-enable;
+		goodix,key-of-pen = <331 332>;/*BTN_STYLUS, BTN_STYLUS2*/
+		sensor0 {
+		    normal-cfg = [];
+		};
+	};
+};
+//ASUS_BSP Beryl --- "touch"
+
+/*    ====================================
+ *    overlay for sm8150-v2.dtsi/sm8150.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-mtp.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-mtp.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for pmi8998.dtsi/pm8998.dtsi - start
+ *    ====================================
+ */
+
+//ASUS BSP Charger +++
+&pm8150b_charger {
+	PMI_MUX_EN = <&pm8150b_gpios 10 0x0>;
+
+	pinctrl-0 = <&chg_input_no_default &chg_output_lo_default &chg_input_high_default &usb2_mux1_en_default &pca9468_en_default &pmi_mux_en_default>;
+};
+
+&pm8150b_gpios {
+	//This pin is changed from EVB(SOC_GPIO34) to SR(PM8150B_GPIO10)
+	gpio10_pmi_mux_en {
+		pmi_mux_en_default: pmi_mux_en_default {
+			pins = "gpio10";
+			function = "normal";
+			bias-disable;
+			output-low;
+			power-source = <0>;
+		};
+	};
+};
+//ASUS BSP Charger ---
+/*    ====================================
+ *    overlay for pmi8998.dtsi/pm8998.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-pinctrl.dtsi - start
+ *    ====================================
+ */
+
+&soc {
+    pinctrl@03000000 {
+        FOD_EXI_active {
+            FOD_EXI_active: FOD_EXI_active {
+                mux {
+                    pins = "gpio164", "gpio165";
+                    function = "gpio";
+                };
+                config {
+                    pins = "gpio164", "gpio165";
+                    drive-strength = <8>;   /* 8 mA */
+                    bias-disable;           /* NO PULL */
+                    output-low;
+                };
+            };
+        };
+    };
+};
+
+
+
+//ASUS BSP Charger +++
+&chg_output_lo_default {
+	mux {
+		pins = "gpio31", "gpio32";
+		function = "gpio";
+	};
+
+	config {
+		pins = "gpio31", "gpio32";
+		drive-strength = <2>;
+		bias-disable;
+		output-low;
+	};
+};
+//ASUS BSP Charger ---
+
+// NXP_PCA9468 +++
+&pca_input_hi_default {
+	mux {
+		pins = "gpio132";
+		function = "gpio";
+	};
+
+	config {
+		pins = "gpio132";
+		drive-strength = <2>;
+		bias-pull-up;
+		input-enable;
+	};
+};
+// NXP_PCA9468 ---
+
+&sde_dsi_active {
+			mux {
+				pins = "gpio34";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio34";
+				drive-strength = <8>;   /* 8 mA */
+				bias-disable = <0>;   /* no pull */
+			};
+		};
+
+&sde_dsi_suspend {
+			mux {
+				pins = "gpio34";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio34";
+				drive-strength = <2>;   /* 2 mA */
+				bias-pull-down;         /* PULL DOWN */
+			};
+		};
+//touch
+&ts_int_active {
+			mux {
+				pins = "gpio122";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio122";
+				drive-strength = <8>;   /* 8 mA */
+				bias-disable = <0>;   /* no pull */
+				input-enable;
+			};
+		};
+
+&ts_int_suspend {
+			mux {
+				pins = "gpio122";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio122";
+				drive-strength = <2>;   /* 2 mA */
+				bias-disable;
+				input-enable;
+			};
+		};
+&ts_reset_active {
+			mux {
+				pins = "gpio135";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio135";
+				drive-strength = <12>;   /* 12 mA */
+				bias-pull-down;
+			};
+		};
+
+&ts_reset_suspend {
+			mux {
+				pins = "gpio135";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio135";
+				drive-strength = <2>;   /* 2 mA */
+				bias-pull-down;
+			};
+		};
+
+//touch
+
+//ASUS_BSP+++ Wigig
+&wil6210 {
+                qcom,pcie-parent = <&pcie0>;
+                pinctrl-names = "default";
+                pinctrl-0 = <&wil6210_refclk3_en_pin>;
+                qcom,wigig-en = <&tlmm 131 0>;
+                qcom,msm-bus,name = "wil6210";
+                qcom,msm-bus,num-cases = <2>;
+                qcom,msm-bus,num-paths = <1>;
+                qcom,msm-bus,vectors-KBps =
+                        <45 512 0 0>,
+                        <45 512 600000 800000>; /* ~4.6Gbps (MCS12) */
+                qcom,use-ext-supply;
+                vddio-supply= <&pm8150_s5>;
+                qcom,use-ext-clocks;
+                clocks = <&clock_rpmh RPMH_RF_CLK3>;
+                clock-names = "rf_clk3_clk";
+                qcom,smmu-support;
+                qcom,smmu-mapping = <0x20000000 0xe0000000>;
+                qcom,smmu-s1-en;
+                qcom,smmu-fast-map;
+                qcom,smmu-coherent;
+                qcom,keep-radio-on-during-sleep;
+                status = "ok";
+};
+
+&pcie0 {
+        reg = <0x1c00000 0x4000>,
+                <0x1c06000 0x1000>,
+                <0x60000000 0xf1d>,
+                <0x60000f20 0xa8>,
+                <0x60001000 0x1000>,
+                <0x60100000 0x100000>,
+                <0x60200000 0x100000>,
+                <0x60300000 0x3d00000>;
+
+        qcom,pcie-phy-ver = <2110>;
+
+        qcom,phy-sequence = <0x0840 0x03 0x0
+                        0x0094 0x08 0x0
+                        0x0154 0x34 0x0
+                        0x016c 0x08 0x0
+                        0x0058 0x0f 0x0
+                        0x00a4 0x42 0x0
+                        0x0110 0x24 0x0
+                        0x011c 0x03 0x0
+                        0x0118 0xb4 0x0
+                        0x010c 0x02 0x0
+                        0x01bc 0x11 0x0
+                        0x00bc 0x82 0x0
+                        0x00d4 0x03 0x0
+                        0x00d0 0x55 0x0
+                        0x00cc 0x55 0x0
+                        0x00b0 0x1a 0x0
+                        0x00ac 0x0a 0x0
+                        0x00c4 0x68 0x0
+                        0x00e0 0x02 0x0
+                        0x00dc 0xaa 0x0
+                        0x00d8 0xab 0x0
+                        0x00b8 0x34 0x0
+                        0x00b4 0x14 0x0
+                        0x0158 0x01 0x0
+                        0x0074 0x06 0x0
+                        0x007c 0x16 0x0
+                        0x0084 0x36 0x0
+                        0x0078 0x06 0x0
+                        0x0080 0x16 0x0
+                        0x0088 0x36 0x0
+                        0x01b0 0x1e 0x0
+                        0x01ac 0xb9 0x0
+                        0x01b8 0x18 0x0
+                        0x01b4 0x94 0x0
+                        0x0050 0x07 0x0
+                        0x0010 0x00 0x0
+                        0x001c 0x31 0x0
+                        0x0020 0x01 0x0
+                        0x0024 0xde 0x0
+                        0x0028 0x07 0x0
+                        0x0030 0x4c 0x0
+                        0x0034 0x06 0x0
+                        0x029c 0x12 0x0
+                        0x0284 0x35 0x0
+                        0x023c 0x11 0x0
+                        0x051c 0x03 0x0
+                        0x0518 0x1c 0x0
+                        0x0524 0x1e 0x0
+                        0x04e8 0x00 0x0
+                        0x04ec 0x0e 0x0
+                        0x04f0 0x4a 0x0
+                        0x04f4 0x0f 0x0
+                        0x05b4 0x04 0x0
+                        0x0434 0x7f 0x0
+                        0x0444 0x70 0x0
+                        0x0510 0x17 0x0
+                        0x04d4 0x54 0x0
+                        0x04d8 0x07 0x0
+                        0x0598 0xd4 0x0
+                        0x059c 0x54 0x0
+                        0x05a0 0xdb 0x0
+                        0x05a4 0x3b 0x0
+                        0x05a8 0x31 0x0
+                        0x0584 0x24 0x0
+                        0x0588 0xe4 0x0
+                        0x058c 0xec 0x0
+                        0x0590 0x3b 0x0
+                        0x0594 0x36 0x0
+                        0x0570 0xff 0x0
+                        0x0574 0xff 0x0
+                        0x0578 0xff 0x0
+                        0x057c 0x7f 0x0
+                        0x0580 0x66 0x0
+                        0x04fc 0x00 0x0
+                        0x04f8 0xc0 0x0
+                        0x0460 0x30 0x0
+                        0x0464 0xc0 0x0
+                        0x05bc 0x0c 0x0
+                        0x04dc 0x0d 0x0
+                        0x0408 0x0c 0x0
+                        0x0414 0x03 0x0
+                        0x09a4 0x01 0x0
+                        0x0c90 0x00 0x0
+                        0x0c40 0x01 0x0
+                        0x0c48 0x01 0x0
+                        0x0c50 0x00 0x0
+                        0x0cbc 0x00 0x0
+                        0x0ce0 0x58 0x0
+                        0x0048 0x90 0x0
+                        0x0c1c 0xc1 0x0
+                        0x0988 0x88 0x0
+                        0x0998 0x0b 0x0
+                        0x08dc 0x0d 0x0
+                        0x09ec 0x01 0x0
+                        0x0800 0x00 0x0
+                        0x0844 0x03 0x0>;
+};
+
+
+&pcie1 {
+        reg = <0x1c08000 0x4000>,
+                <0x1c0e000 0x2000>,
+                <0x40000000 0xf1d>,
+                <0x40000f20 0xa8>,
+                <0x40001000 0x1000>,
+                <0x40100000 0x100000>,
+                <0x40200000 0x100000>,
+                <0x40300000 0x1fd00000>;
+
+        qcom,pcie-phy-ver = <2105>;
+
+        qcom,phy-sequence = <0x0a40 0x03 0x0
+                        0x0010 0x00 0x0
+                        0x001c 0x31 0x0
+                        0x0020 0x01 0x0
+                        0x0024 0xde 0x0
+                        0x0028 0x07 0x0
+                        0x0030 0x4c 0x0
+                        0x0034 0x06 0x0
+                        0x0048 0x90 0x0
+                        0x0058 0x0f 0x0
+                        0x0074 0x06 0x0
+                        0x0078 0x06 0x0
+                        0x007c 0x16 0x0
+                        0x0080 0x16 0x0
+                        0x0084 0x36 0x0
+                        0x0088 0x36 0x0
+                        0x0094 0x08 0x0
+                        0x00a4 0x42 0x0
+                        0x00ac 0x0a 0x0
+                        0x00b0 0x1a 0x0
+                        0x00b4 0x14 0x0
+                        0x00b8 0x34 0x0
+                        0x00bc 0x82 0x0
+                        0x00c4 0x68 0x0
+                        0x00cc 0x55 0x0
+                        0x00d0 0x55 0x0
+                        0x00d4 0x03 0x0
+                        0x00d8 0xab 0x0
+                        0x00dc 0xaa 0x0
+                        0x00e0 0x02 0x0
+                        0x010c 0x02 0x0
+                        0x0110 0x24 0x0
+                        0x0118 0xb4 0x0
+                        0x011c 0x03 0x0
+                        0x0154 0x34 0x0
+                        0x0158 0x01 0x0
+                        0x016c 0x08 0x0
+                        0x01ac 0xb9 0x0
+                        0x01b0 0x1e 0x0
+                        0x01b4 0x94 0x0
+                        0x01b8 0x18 0x0
+                        0x01bc 0x11 0x0
+                        0x023c 0x11 0x0
+                        0x0284 0x35 0x0
+                        0x029c 0x12 0x0
+                        0x0304 0x02 0x0
+                        0x0408 0x0c 0x0
+                        0x0414 0x03 0x0
+                        0x0434 0x7f 0x0
+                        0x0444 0x70 0x0
+                        0x0460 0x30 0x0
+                        0x0464 0xc0 0x0
+                        0x04d4 0x54 0x0
+                        0x04d8 0x07 0x0
+                        0x04dc 0x0d 0x0
+                        0x04e8 0x00 0x0
+                        0x04ec 0x0e 0x0
+                        0x04f0 0x4a 0x0
+                        0x04f4 0x0f 0x0
+                        0x04f8 0xc0 0x0
+                        0x04fc 0x00 0x0
+                        0x0510 0x17 0x0
+                        0x0518 0x1c 0x0
+                        0x051c 0x03 0x0
+                        0x0524 0x1e 0x0
+                        0x0570 0xff 0x0
+                        0x0574 0xff 0x0
+                        0x0578 0xff 0x0
+                        0x057c 0x7f 0x0
+                        0x0580 0x66 0x0
+                        0x0584 0x24 0x0
+                        0x0588 0xe4 0x0
+                        0x058c 0xec 0x0
+                        0x0590 0x3b 0x0
+                        0x0594 0x36 0x0
+                        0x0598 0xd4 0x0
+                        0x059c 0x54 0x0
+                        0x05a0 0xdb 0x0
+                        0x05a4 0x3b 0x0
+                        0x05a8 0x31 0x0
+                        0x05bc 0x0c 0x0
+                        0x063c 0x11 0x0
+                        0x0684 0x35 0x0
+                        0x069c 0x12 0x0
+                        0x0704 0x20 0x0
+                        0x0808 0x0c 0x0
+                        0x0814 0x03 0x0
+                        0x0834 0x7f 0x0
+                        0x0844 0x70 0x0
+                        0x0860 0x30 0x0
+                        0x0864 0xc0 0x0
+                        0x08d4 0x54 0x0
+                        0x08d8 0x07 0x0
+                        0x08dc 0x0d 0x0
+                        0x08e8 0x00 0x0
+                        0x08ec 0x0e 0x0
+                        0x08f0 0x4a 0x0
+                        0x08f4 0x0f 0x0
+                        0x08f8 0xc0 0x0
+                        0x08fc 0x00 0x0
+                        0x0910 0x17 0x0
+                        0x0918 0x1c 0x0
+                        0x091c 0x03 0x0
+                        0x0924 0x1e 0x0
+                        0x0970 0xff 0x0
+                        0x0974 0xff 0x0
+                        0x0978 0xff 0x0
+                        0x097c 0x7f 0x0
+                        0x0980 0x66 0x0
+                        0x0984 0x24 0x0
+                        0x0988 0xe4 0x0
+                        0x098c 0xec 0x0
+                        0x0990 0x3b 0x0
+                        0x0994 0x36 0x0
+                        0x0998 0xd4 0x0
+                        0x099c 0x54 0x0
+                        0x09a0 0xdb 0x0
+                        0x09a4 0x3b 0x0
+                        0x09a8 0x31 0x0
+                        0x09bc 0x0c 0x0
+                        0x0adc 0x05 0x0
+                        0x0b88 0x88 0x0
+                        0x0b98 0x0b 0x0
+                        0x0ba4 0x01 0x0
+                        0x0bec 0x01 0x0
+                        0x0e0c 0x0d 0x0
+                        0x0e14 0x07 0x0
+                        0x0e1c 0xc1 0x0
+                        0x0e40 0x01 0x0
+                        0x0e48 0x01 0x0
+                        0x0e90 0x00 0x0
+                        0x0ebc 0x00 0x0
+                        0x0ee0 0x58 0x0
+                        0x0a00 0x00 0x0
+                        0x0a44 0x03 0x0>;
+};
+//ASUS_BSP--- Wigig
+
+// BSP SZ +++ Lydia_Wu add for DisplayPort
+&sde_dp_aux_active {
+			mux {
+				pins = "gpio164";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio164";
+				bias-disable = <0>; /* no pull */
+				drive-strength = <8>;
+			};
+		};
+
+&sde_dp_aux_suspend {
+			mux {
+				pins = "gpio164";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio164";
+				bias-pull-down;
+				drive-strength = <2>;
+			};
+		};
+// BSP SZ --- Lydia_Wu add for DisplayPort
+
+/*    ====================================
+ *    overlay for sm8150-pinctrl.dtsi - end
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-pmic.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-pmic.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-regulator.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-regulator.dtsi - end
+ *    ====================================
+ */
+  
+
+ 
+/*    ====================================
+ *    overlay for sm8150-v2-camera.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-v2-camera.dtsi - end
+ *    ====================================
+ */
+
+
+
+/*    ====================================
+ *    overlay for sm8150-camera-sensor-mtp.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-camera-sensor-mtp.dtsi - end
+ *    ====================================
+ */
+ 
+
+
+/*    ====================================
+ *    overlay for sm8150-camera.dtsi - start
+ *    ====================================
+ */
+
+/*    ====================================
+ *    overlay for sm8150-camera.dtsi - end
+ *    ====================================
+ */
+
+
+

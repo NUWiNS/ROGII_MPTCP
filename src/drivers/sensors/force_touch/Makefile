@@ -1,0 +1,1 @@
+obj-y                                           += snt8100fsr-linux/
