@@ -27,7 +27,7 @@ FLASHING MPTCP KERNEL
 
      a. adb connect to the phone and do adb reboot bootloader
   
-     b. Use twrp to flash the kernel. Get the twrp image from https://buffalo.box.com/s/behd6ys7b9y2a4qfy4mryqwgjjdybjs2
+     b. Use twrp to flash the kernel. Get the twrp image from https://drive.google.com/file/d/1L6HOdcdwXMB-HbUG8NpbsJHB-mA3re5b/view?usp=sharing
   
      c. Once the bootloader screen is seen, enter the following commands: Fastboot boot <twrp image file name>
   
