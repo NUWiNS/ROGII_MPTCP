@@ -2,7 +2,7 @@
 
 ## Introduction
 
-MPTCP is a modification of standard TCP that allows multiple parallel TCP connections to operate simultaneously over multiple interfaces. It offers certain advantages like aggregated bandwidth, robustness to connection failures, seemles data transfer, etc. Previous research works have focused on MPTCP performance in smartphones in WiFi/LTE scenario with limited throughput gains. It is imperative to study MPTCP performance on a smartphone that is equipped with multi-Gbps technology like mmWave. In this work, we port for first time the MPTCP source code to a dual-band smartphone (ASUS ROGII) equipped with an 802.11ad and an 802.11acradio. 
+MPTCP is a modification of standard TCP that allows multiple parallel TCP connections to operate simultaneously over multiple interfaces. It offers certain advantages like aggregated bandwidth, robustness to connection failures, seemles data transfer, etc. Previous research works have focused on MPTCP performance in smartphones in WiFi/LTE scenario with limited throughput gains. It is imperative to study its performance on a smartphone that is equipped with multi-Gbps technology like mmWave. In this work, we port for first time the MPTCP source code to a dual-band smartphone (ASUS ROGII) equipped with an 802.11ad and an 802.11acradio. 
 
 
 ## Additional Files required to compile this kernel:
