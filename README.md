@@ -10,7 +10,7 @@ MPTCP is a modification of standard TCP that allows multiple parallel TCP connec
 1. android-ndk-r21d
 2. clang r383902b
 
-## COMPILING MPTCP KERNEL
+## Compiling the Kernel
 
 1. If you are compiling for the first time, run the build_kirisakura_clean.sh script
   
